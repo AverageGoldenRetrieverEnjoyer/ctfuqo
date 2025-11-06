@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche Utilisateurs - CTF Challenge</title>
+    <style>
+        :root {
+            --color-bg: #0a0e27;
+            --color-surface: #151b3d;
+            --color-primary: #00d9ff;
+            --color-success: #00ff88;
+            --color-error: #ff4757;
+            --color-text: #e8edf5;
+            --color-border: #2d3561;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background: var(--color-bg);
+            color: var(--color-text);
+            padding: 60px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--color-primary);
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 2.2em;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7982a9;
+            margin-bottom: 40px;
+            font-size: 0.9em;
+        }
+        
+        .search-box {
+            background: var(--color-surface);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        .search-box h2 {
+            margin-bottom: 20px;
+            color: var(--color-primary);
+            font-size: 1.3em;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        label {
+            color: #a8b2d1;
+            font-weight: 600;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-bg);
+            color: var(--color-text);
+            font-size: 16px;
+            font-family: 'Consolas', monospace;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+        }
+        
+        button {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #00d9ff, #0099cc);
+            color: var(--color-bg);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 217, 255, 0.4);
+        }
+        
+        .message-box {
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .message-box.success {
+            background: rgba(0, 255, 136, 0.15);
+            border: 2px solid var(--color-success);
+            color: var(--color-success);
+        }
+        
+        .message-box.error {
+            background: rgba(255, 71, 87, 0.15);
+            border: 2px solid var(--color-error);
+            color: var(--color-error);
+        }
+        
+        .info-panel {
+            background: var(--color-surface);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            margin-top: 30px;
+        }
+        
+        .info-panel h3 {
+            color: var(--color-primary);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .info-panel p {
+            color: #a8b2d1;
+            line-height: 1.8;
+        }
+        
+        code {
+            background: var(--color-bg);
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+        
+        .user-list {
+            background: var(--color-surface);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            margin-top: 25px;
+        }
+        
+        .user-list h3 {
+            color: var(--color-primary);
+            margin-bottom: 12px;
+        }
+        
+        .user-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .user-list li {
+            padding: 8px 0;
+            color: #a8b2d1;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .user-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Système de Recherche</h1>
+        <p class="subtitle">Recherche d'utilisateurs par ID</p>
+        
+        <div class="search-box">
+            <h2>Entrez un ID utilisateur</h2>
+            <form action="/search" method="GET" class="search-form">
+                <label for="id">ID:</label>
+                <input type="text" id="id" name="id" placeholder="Ex: 1, 2, 3...">
+                <button type="submit">🔎 Rechercher</button>
+            </form>
+        </div>
+        
+        {% if message %}
+        <div class="message-box {{ 'success' if success else 'error' }}">
+            {{ message }}
+        </div>
+        {% endif %}
+        
+        <div class="user-list">
+            <h3>📋 Utilisateurs enregistrés</h3>
+            <ul>
+                <li><strong>ID 1:</strong> alice (alice@example.com)</li>
+                <li><strong>ID 2:</strong> bob (bob@example.com)</li>
+                <li><strong>ID 3:</strong> charlie (charlie@example.com)</li>
+            </ul>
+        </div>
+        
+        <div class="info-panel">
+            <h3>💡 Informations</h3>
+            <p>Ce système recherche des utilisateurs dans une base de données SQLite.</p>
+            <p style="margin-top: 10px;">Les réponses sont binaires : soit l'utilisateur existe, soit il n'existe pas.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique en ligne - CTF Challenge</title>
+    <style>
+        :root {
+            --color-bg: #1a1a1a;
+            --color-surface: #2d2d2d;
+            --color-primary: #32a852;
+            --color-text: #e0e0e0;
+            --color-border: #444;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--color-primary);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        
+        .search-box {
+            background: var(--color-surface);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid var(--color-border);
+        }
+        
+        .search-box h2 {
+            margin-bottom: 15px;
+            color: var(--color-primary);
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-bg);
+            color: var(--color-text);
+            font-size: 16px;
+        }
+        
+        button {
+            padding: 12px 28px;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #2a8f45;
+            transform: translateY(-2px);
+        }
+        
+        table {
+            width: 100%;
+            background: var(--color-surface);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+        }
+        
+        th, td {
+            padding: 16px;
+            text-align: left;
+        }
+        
+        th {
+            background: #222;
+            color: var(--color-primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:not(:last-child) {
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        tr:hover {
+            background: rgba(50, 168, 82, 0.1);
+        }
+        
+        .hint {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(50, 168, 82, 0.15);
+            border-left: 4px solid var(--color-primary);
+            border-radius: 8px;
+        }
+        
+        .hint h3 {
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+        
+        code {
+            background: var(--color-bg);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Boutique en ligne</h1>
+        
+        <div class="search-box">
+            <h2>Rechercher un produit</h2>
+            <form action="/search" method="GET" class="search-form">
+                <input type="text" name="q" placeholder="Ex: Ordinateur, Souris..." 
+                       value="{{ search_query if search_query else '' }}">
+                <button type="submit">🔍 Rechercher</button>
+            </form>
+        </div>
+        
+        <h2 style="margin-bottom: 20px;">Catalogue de produits</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Produit</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product[0] }}</td>
+                    <td>{{ product[1] }}</td>
+                    <td>{{ product[2] }}€</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="hint">
+            <h3>💡 Indice pour le challenge</h3>
+            <p>Cette application utilise une base de données SQLite. Savez-vous comment lister toutes les tables d'une base de données ?</p>
+            <p style="margin-top: 10px;">Mot-clé: <code>sqlite_master</code></p>
+        </div>
+    </div>
+    
+    <!-- 
+        INDICE CACHÉ : La table secrète s'appelle "secret_admin_table"
+        Pour les joueurs qui inspectent le code source HTML !
+    -->
+</body>
+</html>
