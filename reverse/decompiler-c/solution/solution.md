@@ -1,6 +1,6 @@
 # Solution du défi "désassembler un programme C"
 
-## Méthode 1: Utiliser les panneaux visuels radare2:
+## Méthode 1: Utiliser les panneaux visuels radare2 (solution officielle)
 
 ### 1. Exécuter le programme
 Commençons par exécuter le programme pour avoir une idée générale de ce qu'il fait.
@@ -11,9 +11,11 @@ Il s'agit d'un jeu de tic tac toe qui exige un nom d'utilisateur et un mot de pa
 
 Il n'y a pas d'autre fichiers que l'exécutable, donc les identifiants sont sûrement hardcodés dans l'exécutable.
 
+Pour quitter l'exécutable, on peut entrer Ctrl-C.
+
 ### 2. Désassembler le programme avec radare2
 ```bash
-r2 -A tic-tac-toe
+r2 -AA tic-tac-toe
 ```
 Cela nous mène à la ligne de commande de radare2.
 
@@ -47,7 +49,7 @@ On peut effectivement y trouver une string qui ressemble drôlement à un mot de
 On trouve quelques autres utilisateurs ainsi que leurs mots de passe, jusqu'à ce qu'on arrive à l'utilisateur ```"Vincent"```, lequel a notre flag comme mot de passe.
 
 ---
-## Méthode 2: Utiliser la ligne de commande radare2:
+## Méthode 2: Utiliser la ligne de commande radare2
 ### 1. Exécuter le programme
 Commençons par exécuter le programme pour avoir une idée générale de ce qu'il fait.
 ```bash
@@ -57,9 +59,11 @@ Il s'agit d'un jeu de tic tac toe qui exige un nom d'utilisateur et un mot de pa
 
 Il n'y a pas d'autre fichiers que l'exécutable, donc les identifiants sont sûrement hardcodés dans l'exécutable.
 
+Pour quitter l'exécutable, on peut entrer Ctrl-C.
+
 ### 2. Désassembler le programme avec radare2
 ```bash
-r2 -A tic-tac-toe
+r2 -AA tic-tac-toe
 ```
 Cela nous mène à la ligne de commande de radare2.
 
@@ -108,7 +112,44 @@ pd 500
 On trouve vers la fin de l'objet l'utilisateur ```"Vincent"```, lequel a notre flag comme mot de passe.
 
 ---
+## Méthode 3: Rechercher avec radare2 (Je voudrais bien la faire disparaître, celle-là...)
+### 1. Exécuter le programme
+Commençons par exécuter le programme pour avoir une idée générale de ce qu'il fait.
+```bash
+./tic-tac-toe
+```
+Il s'agit d'un jeu de tic tac toe qui exige un nom d'utilisateur et un mot de passe pour jouer.
+
+Il n'y a pas d'autre fichiers que l'exécutable, donc les identifiants sont sûrement hardcodés dans l'exécutable.
+
+Pour quitter l'exécutable, on peut entrer Ctrl-C.
+
+### 2. Désassembler le programme avec radare2
+```bash
+r2 -AA tic-tac-toe
+```
+Cela nous mène à la ligne de commande de radare2.
+
+On peut entrer ```help``` pour afficher la liste des commandes de base et ```?``` pour voir la liste complète.
+
+### 3. Chercher la string ```flag```
+Nous cherchons un flag de format ```flag{...}```. Voyons si on peut le trouver dans une string du programme.
+```
+/ flag
+```
+Nous avons effectivement un résultat! Par contre, le flag n'est pas affiché au complet.
+
+### 4. Naviguer jusqu'au flag et l'afficher
+Nous ne voyons pas l'intégralité du flag, mais ce n'est pas grave, puisque nous avons son adresse (```0x43a4```). Il suffit de nous y rendre et d'afficher la string qui s'y trouve.
+```
+s 0x43a4
+pd 1
+```
+
+---
 ## Notes:
+
+### La méthode 3 est trop facile.
 
 #### 1.1 Essayer une attaque de type buffer overflow
 Cela ne fonctionne pas, cette vulnérabilité n'est pas présente dans ce programme.
