@@ -1,0 +1,28 @@
+services:
+  web:
+    image: php:8.1-apache
+    ports:
+      - "8186:80"
+    volumes:
+      - ../src:/var/www/html/
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    command: /bin/bash -c "chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html && apache2-foreground"
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "8187:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "QWERTY)$"
+      MYSQL_USER: ica
+      MYSQL_PASSWORD: "P@ssw0rd!"
+      MYSQL_DATABASE: icadb
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./icaDB.sql:/docker-entrypoint-initdb.d/icaDB.sql:ro
+
+volumes:
+  mysql_data:

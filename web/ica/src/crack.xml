@@ -1,0 +1,14 @@
+<all>
+  <doctrine>
+    <class>sfDoctrineDatabase</class>
+    <param>
+      <dsn>mysql:dbname=icadb;host=SERVER_IP_ADDR;port=8187</dsn>
+      <profiler>false</profiler>
+      <username>ica</username>
+      <password>P@ssw0rd!</password>
+      <attributes>
+        <quote_identifier>true</quote_identifier>
+      </attributes>
+    </param>
+  </doctrine>
+</all>
